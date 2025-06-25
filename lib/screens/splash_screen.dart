@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> changePage() async {
     Future.delayed(Duration(milliseconds: 2500), () {
-      Navigator.pushNamed(context, OnboardingScreen.id);
+      Navigator.pushReplacementNamed(context, OnboardingScreen.id);
     });
   }
 
@@ -32,7 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(padding: const EdgeInsets.all(32), child: Image.asset(AssetsImages.imagesLogo)),
+            Padding(
+              padding: const EdgeInsets.all(48),
+              child: Image.asset(AssetsImages.imagesLogoWithText),
+            ),
           ],
         ),
       ),

@@ -1,0 +1,7 @@
+class Endpoint {
+  static String baseUrl = "http://appkatering.mobileprojp.com";
+  static String register = "$baseUrl/api/register";
+  static String login = "$baseUrl/api/login";
+  static String menus = "$baseUrl/api/menus";
+  static String orders = "$baseUrl/api/orders";
+}

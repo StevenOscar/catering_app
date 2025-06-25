@@ -1,7 +1,9 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class AppColor {
   static const mainOrange = Color(0xffda7635);
   static const mainCream = Color(0xffeae1da);
-  static const mainLightGreen = Color(0xffB1C29E);
+  static const mainLightGreen = Color(0xFF97AA81);
+  static const white = Colors.white;
+  static const black = Colors.black;
 }
