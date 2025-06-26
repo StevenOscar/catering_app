@@ -31,6 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColor.mainCream,
       body: Stack(
         children: [
+          
           Column(
             children: [
               Expanded(
@@ -140,7 +141,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         backgroundColor: AppColor.mainLightGreen,
                         textColor: AppColor.white,
                         onPressed: () {
-                          SharedPrefHelper().setLogin(true);
+                          SharedPrefHelper.setLogin(true);
                           Navigator.pushNamed(context, LoginScreen.id);
                         },
                       ),
@@ -153,7 +154,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         backgroundColor: AppColor.white,
                         textColor: AppColor.mainLightGreen,
                         onPressed: () {
-                          SharedPrefHelper().setLogin(true);
+                          SharedPrefHelper.setLogin(true);
                           Navigator.pushNamed(context, RegisterScreen.id);
                         },
                       ),

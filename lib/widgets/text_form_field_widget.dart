@@ -11,6 +11,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? onEditingComplete;
   final Icon? prefixIcon;
+  final Widget? suffixIcon;
   final String hintText;
 
   const TextFormFieldWidget({
@@ -23,6 +24,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.onEditingComplete,
     this.prefixIcon,
     required this.hintText,
+    this.suffixIcon,
   });
 
   @override
@@ -36,6 +38,7 @@ class TextFormFieldWidget extends StatelessWidget {
         prefixIcon: prefixIcon,
         isDense: true,
         hintText: hintText,
+        suffixIcon: suffixIcon,
         filled: true,
         fillColor: AppColor.white,
         hintStyle: TextStyle(fontStyle: FontStyle.italic),
@@ -45,10 +48,7 @@ class TextFormFieldWidget extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: AppColor.black, width: 1),
-        ),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.redAccent.shade700, width: 1),

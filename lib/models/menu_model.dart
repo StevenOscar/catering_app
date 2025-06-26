@@ -3,16 +3,18 @@ class MenuModel {
   String title;
   String description;
   DateTime date;
-  DateTime createdAt;
-  DateTime updatedAt;
+  int price;
+  dynamic imageUrl;
+  dynamic imagePath;
 
   MenuModel({
     required this.id,
     required this.title,
     required this.description,
     required this.date,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.price,
+    required this.imageUrl,
+    required this.imagePath,
   });
 
   factory MenuModel.fromJson(Map<String, dynamic> json) => MenuModel(
@@ -20,8 +22,9 @@ class MenuModel {
     title: json["title"],
     description: json["description"],
     date: DateTime.parse(json["date"]),
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
+    price: json["price"],
+    imageUrl: json["image_url"],
+    imagePath: json["image_path"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -30,7 +33,8 @@ class MenuModel {
     "description": description,
     "date":
         "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
-    "created_at": createdAt.toIso8601String(),
-    "updated_at": updatedAt.toIso8601String(),
+    "price": price,
+    "image_url": imageUrl,
+    "image_path": imagePath,
   };
 }

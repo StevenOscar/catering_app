@@ -45,7 +45,9 @@ dependencies:
   cached_network_image: ^3.4.1
   fluttertoast: ^8.2.12
   carousel_slider: ^5.1.1
-
+  easy_date_timeline: ^2.0.9
+  animated_bottom_navigation_bar: ^1.4.0
+  shimmer_animation: ^2.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

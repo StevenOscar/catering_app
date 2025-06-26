@@ -1,5 +1,6 @@
 import 'package:catering_app/screens/dashboard_screen.dart';
 import 'package:catering_app/screens/login_screen.dart';
+import 'package:catering_app/screens/main_screen.dart';
 import 'package:catering_app/screens/onboarding_screen.dart';
 import 'package:catering_app/screens/register_screen.dart';
 import 'package:catering_app/screens/splash_screen.dart';
@@ -12,5 +13,6 @@ class AppRoutes {
     OnboardingScreen.id: (context) => OnboardingScreen(),
     RegisterScreen.id: (context) => RegisterScreen(),
     LoginScreen.id: (context) => LoginScreen(),
+    MainScreen.id: (context) => MainScreen(),
   };
 }

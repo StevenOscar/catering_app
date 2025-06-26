@@ -1,11 +1,16 @@
+import 'package:catering_app/api/user_api.dart';
 import 'package:catering_app/constants/app_color.dart';
 import 'package:catering_app/constants/assets_images.dart';
+import 'package:catering_app/helper/shared_pref_helper.dart';
+import 'package:catering_app/screens/main_screen.dart';
 import 'package:catering_app/screens/register_screen.dart';
 import 'package:catering_app/styles/app_text_styles.dart';
 import 'package:catering_app/widgets/elevated_button_widget.dart';
 import 'package:catering_app/widgets/text_form_field_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "/login";
@@ -18,7 +23,108 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool obscureText = false;
+  bool obscureText = true;
+  bool _isLoading = false;
+  final FToast fToast = FToast();
+
+  @override
+  void initState() {
+    super.initState();
+    fToast.init(context);
+  }
+
+  void login() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final res = await UserApi.loginUser(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    if (res.errors != null) {
+      final errorList = res.errors!.toList();
+      fToast.showToast(
+        gravity: ToastGravity.TOP,
+        toastDuration: Duration(seconds: 2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColor.red,
+            border: Border.all(color: AppColor.red.shade900, width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          child: Row(
+            children: [
+              Icon(Icons.cancel_rounded, color: AppColor.white, size: 40),
+              SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:
+                    errorList.map((e) {
+                      return Text(
+                        e,
+                        style: AppTextStyles.body1(
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    }).toList(),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else if (res.data != null) {
+      await SharedPrefHelper.setToken(res.data!.token!);
+      fToast.showToast(
+        gravity: ToastGravity.TOP,
+        toastDuration: Duration(seconds: 2),
+        child: Container(
+          decoration: BoxDecoration(color: AppColor.green, borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            children: [
+              Icon(Icons.check, color: AppColor.white, size: 40),
+              SizedBox(width: 16),
+              Text(
+                res.message,
+                style: AppTextStyles.body1(fontWeight: FontWeight.w600, color: AppColor.white),
+              ),
+            ],
+          ),
+        ),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, MainScreen.id, (route) => false);
+    } else {
+      fToast.showToast(
+        gravity: ToastGravity.TOP,
+        toastDuration: Duration(seconds: 2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColor.red,
+            border: Border.all(color: AppColor.red.shade900, width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          child: Row(
+            children: [
+              Icon(Icons.cancel_rounded, color: AppColor.white, size: 40),
+              SizedBox(width: 16),
+              Text(
+                res.message,
+                style: AppTextStyles.body1(fontWeight: FontWeight.w600, color: AppColor.white),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,24 +189,43 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColor.black.withValues(alpha: 0.67),
                       ),
                     ),
-                    SizedBox(height: 16),
-                    TextFormFieldWidget(controller: emailController, hintText: "Email"),
+                    SizedBox(height: 24),
+                    TextFormFieldWidget(
+                      controller: emailController,
+                      hintText: "Email",
+                      prefixIcon: Icon(Icons.email, size: 22),
+                      inputFormatters: [],
+                    ),
                     SizedBox(height: 16),
                     TextFormFieldWidget(
                       controller: passwordController,
                       hintText: "Password",
-                      obscureText: obscureText,
-                    ),
-                    SizedBox(height: 36),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButtonWidget(
-                        onPressed: () {},
-                        backgroundColor: AppColor.mainLightGreen,
-                        textColor: AppColor.white,
-                        text: "Log In",
+                      prefixIcon: Icon(Icons.password, size: 22),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                          });
+                        },
+                        icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
                       ),
+                      obscureText: obscureText,
+                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[ ]'))],
                     ),
+                    _isLoading ? SizedBox(height: 32) : SizedBox(height: 44),
+                    _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButtonWidget(
+                            onPressed: () {
+                              login();
+                            },
+                            backgroundColor: AppColor.mainLightGreen,
+                            textColor: AppColor.white,
+                            text: "Log In",
+                          ),
+                        ),
                   ],
                 ),
               ),
@@ -118,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       recognizer:
                           TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(context, RegisterScreen.id);
+                              Navigator.pushReplacementNamed(context, RegisterScreen.id);
                             },
                       style: AppTextStyles.body3(
                         fontWeight: FontWeight.w700,
