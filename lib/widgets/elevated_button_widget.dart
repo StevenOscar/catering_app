@@ -6,7 +6,7 @@ class ElevatedButtonWidget extends StatelessWidget {
   final String text;
   final Color backgroundColor;
   final Color textColor;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   const ElevatedButtonWidget({
     super.key,

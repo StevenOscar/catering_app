@@ -4,4 +4,5 @@ class Endpoint {
   static String login = "$baseUrl/api/login";
   static String menus = "$baseUrl/api/menus";
   static String orders = "$baseUrl/api/orders";
+  static String categories = "$baseUrl/api/categories";
 }

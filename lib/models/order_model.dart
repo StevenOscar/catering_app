@@ -1,11 +1,14 @@
+import 'package:catering_app/models/menu_model.dart';
+
 class OrderModel {
   int id;
   int userId;
   int menuId;
   String deliveryAddress;
-  String status;
+  String? status;
   DateTime createdAt;
   DateTime updatedAt;
+  MenuModel? menu;
 
   OrderModel({
     required this.id,
@@ -15,17 +18,21 @@ class OrderModel {
     required this.status,
     required this.createdAt,
     required this.updatedAt,
+    this.menu,
   });
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
-    id: json["id"],
-    userId: json["user_id"],
-    menuId: json["menu_id"],
-    deliveryAddress: json["delivery_address"],
-    status: json["status"],
-    createdAt: DateTime.parse(json["created_at"]),
-    updatedAt: DateTime.parse(json["updated_at"]),
-  );
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      id: json["id"],
+      userId: int.parse(json["user_id"].toString()),
+      menuId: int.parse(json["menu_id"].toString()),
+      deliveryAddress: json["delivery_address"],
+      status: json["status"],
+      createdAt: DateTime.parse(json["created_at"]),
+      updatedAt: DateTime.parse(json["updated_at"]),
+      menu: json["menu"] != null ? MenuModel.fromJson(json["menu"]) : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "id": id,

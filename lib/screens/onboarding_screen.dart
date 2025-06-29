@@ -31,7 +31,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: AppColor.mainCream,
       body: Stack(
         children: [
-          
           Column(
             children: [
               Expanded(

@@ -36,6 +36,7 @@ class UserApi {
       headers: {"Accept": "application/json"},
       body: {"email": email, "password": password},
     );
+    print(response.body);
     if (response.statusCode == 200) {
       return ResponseModel<UserModel>.fromJson(
         json: jsonDecode(response.body),

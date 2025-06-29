@@ -3,6 +3,7 @@ import 'package:catering_app/constants/app_color.dart';
 import 'package:catering_app/constants/assets_images.dart';
 import 'package:catering_app/screens/login_screen.dart';
 import 'package:catering_app/styles/app_text_styles.dart';
+import 'package:catering_app/utils/app_toast.dart';
 import 'package:catering_app/widgets/elevated_button_widget.dart';
 import 'package:catering_app/widgets/text_form_field_widget.dart';
 import 'package:flutter/gestures.dart';
@@ -22,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  bool obscureText = false;
+  bool obscureText = true;
   bool _isLoading = false;
 
   final FToast fToast = FToast();
@@ -80,52 +81,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
     } else if (res.data != null) {
-      fToast.showToast(
-        gravity: ToastGravity.TOP,
-        toastDuration: Duration(seconds: 2),
-        child: Container(
-          decoration: BoxDecoration(color: AppColor.green, borderRadius: BorderRadius.circular(20)),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Row(
-            children: [
-              Icon(Icons.check, color: AppColor.white, size: 40),
-              SizedBox(width: 16),
-              Text(
-                res.message,
-                style: AppTextStyles.body1(fontWeight: FontWeight.w600, color: AppColor.white),
-              ),
-            ],
-          ),
-        ),
-      );
+      AppToast.showSuccessToast(fToast, res.message);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false,
       );
     } else {
-      fToast.showToast(
-        gravity: ToastGravity.TOP,
-        toastDuration: Duration(seconds: 2),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColor.red,
-            border: Border.all(color: AppColor.red.shade900, width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          child: Row(
-            children: [
-              Icon(Icons.cancel_rounded, color: AppColor.white, size: 40),
-              SizedBox(width: 16),
-              Text(
-                res.message,
-                style: AppTextStyles.body1(fontWeight: FontWeight.w600, color: AppColor.white),
-              ),
-            ],
-          ),
-        ),
-      );
+      AppToast.showErrorToast(fToast, res.message);
     }
 
     setState(() {
@@ -226,6 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 : Icon(Icons.visibility, size: 20),
                       ),
                       obscureText: obscureText,
+                      maxlines: 1,
                       inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[ ]'))],
                     ),
                     _isLoading ? SizedBox(height: 32) : SizedBox(height: 44),

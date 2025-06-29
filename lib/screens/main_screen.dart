@@ -1,6 +1,8 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:catering_app/constants/app_color.dart';
+import 'package:catering_app/screens/admin_screen.dart';
 import 'package:catering_app/screens/dashboard_screen.dart';
+import 'package:catering_app/screens/order_screen.dart';
 import 'package:catering_app/styles/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +16,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentPage = 0;
-  static List<Widget> screenList = [DashboardScreen(), DashboardScreen(), DashboardScreen()];
-  static List<IconData> iconList = [Icons.today, Icons.receipt_long, Icons.delivery_dining_sharp];
-  static List<String> labelList = ["Daily", "Order", "Delivery"];
+  static List<Widget> screenList = [DashboardScreen(), OrderScreen(), AdminScreen()];
+  static List<IconData> iconList = [
+    Icons.today,
+    Icons.receipt_long,
+    Icons.admin_panel_settings_outlined,
+  ];
+  static List<String> labelList = ["Daily", "Order", "Admin"];
 
   @override
   Widget build(BuildContext context) {
