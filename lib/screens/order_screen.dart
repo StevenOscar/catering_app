@@ -36,6 +36,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
     if (status == "all") {
       categorized = [...orders];
+      categorized.sort((a, b) {
+        return a.menu!.date.compareTo(b.menu!.date);
+      });
       return categorized;
     }
 
@@ -45,8 +48,6 @@ class _OrderScreenState extends State<OrderScreen> {
       }
     }
     categorized.sort((a, b) {
-      print(b.menu!.date);
-      print(a.menu!.date);
       return b.menu!.date.compareTo(a.menu!.date);
     });
 
@@ -289,6 +290,7 @@ class _OrderScreenState extends State<OrderScreen> {
     }
 
     if (order.deliveryAddress != address) {
+      print(order.id);
       final res = await CateringApi.updateDeliveryAddress(
         deliveryAddress: address,
         orderId: order.id,
@@ -310,6 +312,7 @@ class _OrderScreenState extends State<OrderScreen> {
         });
       }
     }
+    Navigator.pop(context);
   }
 
   Future<void> delete(int orderId) async {
@@ -331,287 +334,284 @@ class _OrderScreenState extends State<OrderScreen> {
             orderFuture = CateringApi.getOrder();
           });
         },
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: orderFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasData && snapshot.data!.data != null) {
-                final orderList = snapshot.data!.data;
-                final categorizedOrder = _filterOrderByStatus(orderList!);
-                Color currColor = _statusColor(status);
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 28, vertical: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: AppColor.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(width: 2, color: currColor),
-                        ),
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: DropdownButton(
-                          isExpanded: true,
-                          style: AppTextStyles.body2(
-                            fontWeight: FontWeight.w500,
-                            color: AppColor.black,
-                          ),
-                          dropdownColor: AppColor.white,
-                          icon: Icon(Icons.arrow_drop_down, color: currColor),
-                          borderRadius: BorderRadius.circular(10),
-                          value: status,
-                          items: [
-                            DropdownMenuItem(
-                              value: "all",
-                              child: Text(
-                                "All",
-                                style: AppTextStyles.body2(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColor.black,
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: "pending",
-                              child: Text(
-                                "Pending",
-                                style: AppTextStyles.body2(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColor.mainOrange,
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: "on_delivery",
-                              child: Text(
-                                "On Delivery",
-                                style: AppTextStyles.body2(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColor.blue,
-                                ),
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: "delivered",
-                              child: Text(
-                                "Delivered",
-                                style: AppTextStyles.body2(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppColor.green,
-                                ),
-                              ),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            status = value!;
-                            _filterOrderByStatus(orderList);
-                            setState(() {});
-                          },
-                        ),
+        child: FutureBuilder(
+          future: orderFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData && snapshot.data!.data != null) {
+              final orderList = snapshot.data!.data;
+              final categorizedOrder = _filterOrderByStatus(orderList!);
+              Color currColor = _statusColor(status);
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+                child: ListView(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColor.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(width: 2, color: currColor),
                       ),
-                      SizedBox(height: 32),
-                      categorizedOrder.isEmpty
-                          ? SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: Center(
-                              child: Text(
-                                "Tidak ada Pesanan pada kategori ini",
-                                style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: DropdownButton(
+                        isExpanded: true,
+                        style: AppTextStyles.body2(
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.black,
+                        ),
+                        dropdownColor: AppColor.white,
+                        icon: Icon(Icons.arrow_drop_down, color: currColor),
+                        borderRadius: BorderRadius.circular(10),
+                        value: status,
+                        items: [
+                          DropdownMenuItem(
+                            value: "all",
+                            child: Text(
+                              "All",
+                              style: AppTextStyles.body2(
+                                fontWeight: FontWeight.w800,
+                                color: AppColor.black,
                               ),
                             ),
-                          )
-                          : ExpansionTileList(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            separatorBuilder:
-                                (context, index) => Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Divider(),
+                          ),
+                          DropdownMenuItem(
+                            value: "pending",
+                            child: Text(
+                              "Pending",
+                              style: AppTextStyles.body2(
+                                fontWeight: FontWeight.w800,
+                                color: AppColor.mainOrange,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: "on_delivery",
+                            child: Text(
+                              "On Delivery",
+                              style: AppTextStyles.body2(
+                                fontWeight: FontWeight.w800,
+                                color: AppColor.blue,
+                              ),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: "delivered",
+                            child: Text(
+                              "Delivered",
+                              style: AppTextStyles.body2(
+                                fontWeight: FontWeight.w800,
+                                color: AppColor.green,
+                              ),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          status = value!;
+                          _filterOrderByStatus(orderList);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 32),
+                    categorizedOrder.isEmpty
+                        ? SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Center(
+                            child: Text(
+                              "Tidak ada Pesanan pada kategori ini",
+                              style: AppTextStyles.body2(fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                        : ExpansionTileList(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          separatorBuilder:
+                              (context, index) => Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: Divider(),
+                              ),
+                          enableTrailingAnimation: false,
+
+                          children: [
+                            for (int i = 0; i < categorizedOrder.length; i++)
+                              ExpansionTile(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                            enableTrailingAnimation: false,
-                            children: [
-                              for (int i = 0; i < categorizedOrder.length; i++)
-                                ExpansionTile(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+
+                                backgroundColor: AppColor.mainOrange,
+                                collapsedBackgroundColor: AppColor.mainOrange,
+                                showTrailingIcon: true,
+                                tilePadding: EdgeInsets.symmetric(vertical: 8),
+                                collapsedShape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                trailing: Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      editOrder(order: categorizedOrder[i]);
+                                    },
+                                    icon: Icon(Icons.edit, color: AppColor.white),
                                   ),
-                                  backgroundColor: AppColor.mainOrange,
-                                  collapsedBackgroundColor: AppColor.mainOrange,
-                                  showTrailingIcon: true,
-                                  tilePadding: EdgeInsets.symmetric(vertical: 8),
-                                  collapsedShape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  trailing: Padding(
-                                    padding: const EdgeInsets.only(right: 12),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        editOrder(order: categorizedOrder[i]);
-                                      },
-                                      icon: Icon(Icons.edit, color: AppColor.white),
-                                    ),
-                                  ),
-                                  title: Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.fastfood_outlined, color: AppColor.white),
-                                        SizedBox(width: 16),
-                                        Expanded(
-                                          child: Text(
-                                            categorizedOrder[i].menu!.title,
-                                            maxLines: 4,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: AppTextStyles.body1(
-                                              fontWeight: FontWeight.w800,
-                                              color: AppColor.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.access_time, color: AppColor.white),
-                                        const SizedBox(width: 16),
-                                        Text(
-                                          AppDateFormatter.dateMonthYear(
-                                            categorizedOrder[i].menu!.date,
-                                          ),
+                                ),
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.fastfood_outlined, color: AppColor.white),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: Text(
+                                          categorizedOrder[i].menu!.title,
+                                          maxLines: 4,
+                                          overflow: TextOverflow.ellipsis,
                                           style: AppTextStyles.body1(
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w800,
                                             color: AppColor.white,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                                      width: double.infinity,
-                                      color: AppColor.white,
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.location_on_outlined,
-                                                color: AppColor.mainLightGreen,
-                                              ),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: Text(
-                                                  categorizedOrder[i].deliveryAddress,
-                                                  style: AppTextStyles.body3(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 8),
-                                          Row(
-                                            children: [
-                                              Icon(Icons.receipt, color: AppColor.mainOrange),
-                                              const SizedBox(width: 16),
-                                              Text(
-                                                "Status Pengiriman: ",
+                                ),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.access_time, color: AppColor.white),
+                                      const SizedBox(width: 16),
+                                      Text(
+                                        AppDateFormatter.dateMonthYear(
+                                          categorizedOrder[i].menu!.date,
+                                        ),
+                                        style: AppTextStyles.body1(
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColor.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                                    width: double.infinity,
+                                    color: AppColor.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_outlined,
+                                              color: AppColor.mainLightGreen,
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                categorizedOrder[i].deliveryAddress,
                                                 style: AppTextStyles.body3(
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                              Container(
-                                                margin: const EdgeInsets.only(left: 4),
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 4,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: _statusColor(
-                                                    categorizedOrder[i].status!,
-                                                  ).withValues(alpha: 0.2),
-                                                  borderRadius: BorderRadius.circular(20),
-                                                ),
-                                                child: Text(
-                                                  categorizedOrder[i].status!
-                                                      .toUpperCase()
-                                                      .replaceAll("_", " "),
-                                                  style: AppTextStyles.body3(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: _statusColor(
-                                                      categorizedOrder[i].status!,
-                                                    ),
-                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            Icon(Icons.receipt, color: AppColor.mainOrange),
+                                            const SizedBox(width: 16),
+                                            Text(
+                                              "Status Pengiriman: ",
+                                              style: AppTextStyles.body3(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(left: 4),
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 10,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: _statusColor(
+                                                  categorizedOrder[i].status!,
+                                                ).withValues(alpha: 0.2),
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                              child: Text(
+                                                categorizedOrder[i].status!
+                                                    .toUpperCase()
+                                                    .replaceAll("_", " "),
+                                                style: AppTextStyles.body3(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: _statusColor(categorizedOrder[i].status!),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 8),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Icon(Icons.today_outlined, color: AppColor.indigo),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: Text(
-                                                  "Dipesan pada: ${AppDateFormatter.dateMonthYear(categorizedOrder[i].createdAt)}",
-                                                  style: AppTextStyles.body3(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(Icons.today_outlined, color: AppColor.indigo),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                "Dipesan pada: ${AppDateFormatter.dateMonthYear(categorizedOrder[i].createdAt)}",
+                                                style: AppTextStyles.body3(
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 8),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Icon(Icons.money, color: AppColor.blue),
-                                              const SizedBox(width: 16),
-                                              Expanded(
-                                                child: Text(
-                                                  "Harga: ${MoneyFormatter.toIdr(categorizedOrder[i].menu!.price!)}",
-                                                  style: AppTextStyles.body3(
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Icon(Icons.money, color: AppColor.blue),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Text(
+                                                "Harga: ${MoneyFormatter.toIdr(categorizedOrder[i].menu!.price!)}",
+                                                style: AppTextStyles.body3(
+                                                  fontWeight: FontWeight.w600,
                                                 ),
                                               ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                            ],
-                          ),
-                    ],
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                  ],
+                ),
+              );
+            } else {
+              return SizedBox(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: Center(
+                  child: Text(
+                    "Tidak ada riwayat pemesanan",
+                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
                   ),
-                );
-              } else {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: Center(
-                    child: Text(
-                      "Tidak ada riwayat pemesanan",
-                      style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
+                ),
+              );
+            }
+          },
         ),
       ),
     );

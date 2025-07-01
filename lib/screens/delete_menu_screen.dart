@@ -18,7 +18,6 @@ class DeleteMenuScreen extends StatefulWidget {
 
 class _DeleteMenuScreenState extends State<DeleteMenuScreen> {
   late Future<ResponseModel<List<MenuModel>>> menuFuture;
-  TextEditingController searchController = TextEditingController();
   final FToast fToast = FToast();
 
   @override
@@ -108,8 +107,21 @@ class _DeleteMenuScreenState extends State<DeleteMenuScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Card(
+                              shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(color: AppColor.mainOrange, width: 1),
+                              ),
+                              elevation: 4,
                               child: ListTile(
-                                contentPadding: const EdgeInsets.all(12),
+                                shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(color: AppColor.mainOrange, width: 1),
+                                ),
+                                tileColor: AppColor.white,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 title: Text(
                                   menu.title,
                                   style: AppTextStyles.body1(fontWeight: FontWeight.bold),
@@ -135,35 +147,65 @@ class _DeleteMenuScreenState extends State<DeleteMenuScreen> {
                                     ),
                                   ],
                                 ),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () async {
-                                    await showDialog(
-                                      context: context,
-                                      builder:
-                                          (_) => AlertDialog(
-                                            title: Text("Hapus Menu"),
-                                            content: Text(
-                                              "Apakah kamu yakin ingin menghapus menu ini?",
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                child: Text("Batal"),
-                                              ),
-                                              ElevatedButton(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.red,
+                                trailing: CircleAvatar(
+                                  backgroundColor: AppColor.mainOrange,
+                                  child: GestureDetector(
+                                    child: Icon(
+                                      Icons.delete_outline_outlined,
+                                      color: AppColor.white,
+                                      size: 25,
+                                    ),
+                                    onTap: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder:
+                                            (_) => AlertDialog(
+                                              backgroundColor: AppColor.white,
+                                              title: Text(
+                                                "Hapus Menu",
+                                                style: AppTextStyles.heading3(
+                                                  fontWeight: FontWeight.w800,
+                                                  color: AppColor.mainOrange,
                                                 ),
-                                                onPressed: () {
-                                                  delete(menu.id!);
-                                                },
-                                                child: Text("Hapus"),
                                               ),
-                                            ],
-                                          ),
-                                    );
-                                  },
+                                              content: Text(
+                                                "Apakah kamu yakin ingin menghapus menu ini?",
+                                                style: AppTextStyles.body2(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColor.black,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context),
+                                                  child: Text(
+                                                    "Batal",
+                                                    style: AppTextStyles.body3(
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColor.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: AppColor.red,
+                                                  ),
+                                                  onPressed: () {
+                                                    delete(menu.id!);
+                                                  },
+                                                  child: Text(
+                                                    "Hapus",
+                                                    style: AppTextStyles.body3(
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColor.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                    },
+                                  ),
                                 ),
                                 leading:
                                     menu.imageUrl != null

@@ -33,7 +33,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   File? selectedImage;
   List<CategoryModel> categories = [];
   final FToast fToast = FToast();
-  final bool _isLoadingButton = false;
+  bool _isLoadingButton = false;
   bool _isLoadingCategory = false;
 
   @override
@@ -61,6 +61,9 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
   }
 
   Future<void> addMenu() async {
+    setState(() {
+      _isLoadingButton = true;
+    });
     final res = await CateringApi.postMenu(
       menu: MenuModel(
         title: titleController.text,
@@ -71,7 +74,10 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
         imageUrl: selectedImage == null ? null : base64Encode(selectedImage!.readAsBytesSync()),
       ),
     );
-    if (res.errors != null) {
+    if (res.data != null) {
+      AppToast.showSuccessToast(fToast, res.message);
+      Navigator.pop(context);
+    } else if (res.errors != null) {
       final errorList = res.errors!.toList();
       fToast.showToast(
         gravity: ToastGravity.TOP,
@@ -105,12 +111,12 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           ),
         ),
       );
-    } else if (res.data != null) {
-      AppToast.showSuccessToast(fToast, res.message);
     } else {
       AppToast.showErrorToast(fToast, res.message);
-      return;
     }
+    setState(() {
+      _isLoadingButton = false;
+    });
   }
 
   Future<void> pickImage() async {
@@ -162,7 +168,28 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: ListView(
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: 24),
+              GestureDetector(
+                onTap: () {
+                  pickImage();
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 220,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: selectedImage == null ? Colors.grey.shade400 : null,
+                    image:
+                        selectedImage == null
+                            ? null
+                            : DecorationImage(image: FileImage(selectedImage!), fit: BoxFit.cover),
+                  ),
+                  child:
+                      selectedImage == null
+                          ? Icon(Icons.add_photo_alternate, size: 60, color: AppColor.white)
+                          : SizedBox(),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Column(
@@ -173,7 +200,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                       controller: titleController,
                       hintText: "Judul",
                       maxlines: 1,
-                      prefixIcon: Icon(Icons.title, size: 22),
+                      prefixIcon: Icon(Icons.title, size: 22, color: AppColor.mainOrange),
                       inputFormatters: [],
                     ),
                     SizedBox(height: 20),
@@ -181,18 +208,15 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                       controller: priceController,
                       keyboardType: TextInputType.number,
                       hintText: "Harga",
-                      prefixIcon: Icon(Icons.money, size: 22),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.deny(RegExp(r'[+!@#$%^&*(),.?":{}|<>]]')),
-                        FilteringTextInputFormatter.deny(RegExp(r'[a-zA-Z]')),
-                      ],
+                      prefixIcon: Icon(Icons.money, size: 22, color: AppColor.mainOrange),
+                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[^\d]'))],
                     ),
                     SizedBox(height: 20),
                     TextFormFieldWidget(
                       controller: descriptionController,
                       hintText: "Deskripsi",
                       maxlines: 3,
-                      prefixIcon: Icon(Icons.description, size: 22),
+                      prefixIcon: Icon(Icons.description, size: 22, color: AppColor.mainOrange),
                       inputFormatters: [],
                     ),
                     SizedBox(height: 16),
@@ -212,7 +236,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                     ),
                     SizedBox(height: 8),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
                       child: SizedBox(
                         width: double.infinity,
                         child: ElevatedButtonWidget(
@@ -242,7 +266,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                           decoration: BoxDecoration(
                             color: AppColor.white,
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(width: 1, color: AppColor.black),
+                            border: Border.all(width: 1.5, color: AppColor.mainOrange),
                           ),
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(horizontal: 12),
@@ -263,7 +287,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                                   child: Text(
                                     categories[i].name,
                                     style: AppTextStyles.body2(
-                                      fontWeight: FontWeight.w800,
+                                      fontWeight: FontWeight.w700,
                                       color: AppColor.black,
                                     ),
                                   ),
@@ -276,32 +300,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                             },
                           ),
                         ),
-                    SizedBox(height: 24),
-                    GestureDetector(
-                      onTap: () {
-                        pickImage();
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: selectedImage == null ? Colors.grey.shade400 : null,
-                          image:
-                              selectedImage == null
-                                  ? null
-                                  : DecorationImage(
-                                    image: FileImage(selectedImage!),
-                                    fit: BoxFit.cover,
-                                  ),
-                        ),
-                        child:
-                            selectedImage == null
-                                ? Icon(Icons.add_photo_alternate, size: 60)
-                                : SizedBox(),
-                      ),
-                    ),
-                    SizedBox(height: 44),
+                    SizedBox(height: 36),
                     _isLoadingButton
                         ? Center(child: CircularProgressIndicator())
                         : SizedBox(
@@ -315,6 +314,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                             text: "Add Menu",
                           ),
                         ),
+                    SizedBox(height: 24),
                   ],
                 ),
               ),

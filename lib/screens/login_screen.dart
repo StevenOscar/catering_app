@@ -27,6 +27,14 @@ class _LoginScreenState extends State<LoginScreen> {
   bool obscureText = true;
   bool _isLoading = false;
   final FToast fToast = FToast();
+  bool hideBackButton = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    hideBackButton = args?['hide_back_button'] ?? false;
+  }
 
   @override
   void initState() {
@@ -103,28 +111,30 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 60),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AppColor.mainOrange,
-                        radius: 20,
-                        child: CircleAvatar(
-                          backgroundColor: AppColor.white,
-                          radius: 19,
-                          child: Icon(Icons.arrow_back, size: 28, color: AppColor.mainOrange),
-                        ),
+              !hideBackButton
+                  ? Padding(
+                    padding: const EdgeInsets.only(top: 60),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppColor.mainOrange,
+                            radius: 20,
+                            child: CircleAvatar(
+                              backgroundColor: AppColor.white,
+                              radius: 19,
+                              child: Icon(Icons.arrow_back, size: 28, color: AppColor.mainOrange),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
+                  )
+                  : SizedBox(height: 120),
               SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -157,22 +167,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFormFieldWidget(
                       controller: emailController,
                       hintText: "Email",
-                      prefixIcon: Icon(Icons.email, size: 22),
+                      prefixIcon: Icon(Icons.email, size: 22, color: AppColor.mainOrange),
                       inputFormatters: [],
                     ),
                     SizedBox(height: 16),
                     TextFormFieldWidget(
                       controller: passwordController,
                       hintText: "Password",
-                      maxlines:1,
-                      prefixIcon: Icon(Icons.password, size: 22),
+                      maxlines: 1,
+                      prefixIcon: Icon(Icons.password, size: 22, color: AppColor.mainOrange),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
                             obscureText = !obscureText;
                           });
                         },
-                        icon: obscureText ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                        icon:
+                            obscureText
+                                ? Icon(Icons.visibility_off, color: AppColor.mainOrange)
+                                : Icon(Icons.visibility, color: AppColor.mainOrange),
                       ),
                       obscureText: obscureText,
                       inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[ ]'))],

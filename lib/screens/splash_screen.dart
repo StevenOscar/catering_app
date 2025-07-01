@@ -28,10 +28,12 @@ class _SplashScreenState extends State<SplashScreen> {
       if (token.isNotEmpty) {
         Navigator.pushReplacementNamed(context, MainScreen.id);
       } else if (first) {
-        Navigator.pushReplacementNamed(context, OnboardingScreen.id);
+        Navigator.pushReplacementNamed(context, LoginScreen.id,   arguments: {'hide_back_button': true},
+        );
+
         await SharedPrefHelper.setLogin(false);
       } else {
-        Navigator.pushReplacementNamed(context, LoginScreen.id);
+        Navigator.pushReplacementNamed(context, OnboardingScreen.id);
       }
     });
   }

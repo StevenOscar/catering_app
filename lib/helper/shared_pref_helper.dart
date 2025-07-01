@@ -45,19 +45,15 @@ class SharedPrefHelper {
     prefs.setString(_createdAtKey, user.createdAt!.toString());
   }
 
-  static Future<Map<String,dynamic>> getUserData() async {
+  static Future<Map<String, dynamic>> getUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final name = prefs.getString(_nameKey);
     final email = prefs.getString(_emailKey);
     final createdAt = prefs.getString(_createdAtKey);
-    return {
-      "name":name,
-      "email":email,
-      "created_at":createdAt
-    };
+    return {"name": name, "email": email, "created_at": createdAt};
   }
 
-  static Future<void> deleteUSerData() async {
+  static Future<void> deleteUserData() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_nameKey);
     prefs.remove(_emailKey);

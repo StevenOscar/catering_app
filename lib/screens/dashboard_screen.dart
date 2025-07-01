@@ -329,12 +329,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Row(
                           children: [
                             Icon(Icons.location_on, size: 28, color: AppColor.mainLightGreen),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               "PPKD Jakarta Pusat",
                               style: AppTextStyles.body2(fontWeight: FontWeight.w800),
                             ),
-                            Icon(Icons.keyboard_arrow_down_rounded, size: 28),
+                            const Icon(Icons.keyboard_arrow_down_rounded, size: 28),
                           ],
                         ),
                         GestureDetector(
@@ -343,40 +343,90 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               context: context,
                               builder:
                                   (context) => AlertDialog(
+                                    backgroundColor: AppColor.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
                                     content: Column(
                                       mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          userData.name!,
-                                          style: AppTextStyles.body3(
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColor.mainOrange,
-                                          ),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            const CircleAvatar(
+                                              radius: 40,
+                                              backgroundColor: AppColor.mainOrange,
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 40,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 12),
+                                            Text(
+                                              userData.name ?? '-',
+                                              style: AppTextStyles.body1(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColor.mainOrange,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            Text(
+                                              userData.email ?? '-',
+                                              style: AppTextStyles.body2(
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey[700],
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
+                                        const SizedBox(height: 4),
+                                        Divider(color: Colors.grey[300]),
+                                        const SizedBox(height: 8),
                                         Text(
-                                          userData.email!,
-                                          style: AppTextStyles.body3(
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColor.mainOrange,
+                                          "Tanggal Pendaftaran",
+                                          style: AppTextStyles.body2(
+                                            fontWeight: FontWeight.w700,
+                                            color: Colors.black87,
                                           ),
                                         ),
                                         Text(
                                           AppDateFormatter.dateMonthYear(userData.createdAt!),
-                                          style: AppTextStyles.body3(
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColor.mainOrange,
+                                          style: AppTextStyles.body2(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey[700],
                                           ),
                                         ),
+                                        const SizedBox(height: 24),
                                         SizedBox(
                                           width: double.infinity,
-                                          child: ElevatedButtonWidget(
-                                            backgroundColor: AppColor.red,
-                                            textColor: AppColor.white,
-                                            text: "Log out",
+                                          child: ElevatedButton.icon(
+                                            icon: Icon(
+                                              Icons.logout,
+                                              size: 18,
+                                              color: AppColor.white,
+                                            ),
+                                            label: Text(
+                                              "Log out",
+                                              style: AppTextStyles.body2(
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: AppColor.red,
+                                              foregroundColor: AppColor.white,
+                                              padding: const EdgeInsets.symmetric(vertical: 14),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                            ),
                                             onPressed: () async {
                                               await SharedPrefHelper.deleteLogin();
                                               await SharedPrefHelper.deleteToken();
-                                              await SharedPrefHelper.deleteUSerData();
+                                              await SharedPrefHelper.deleteUserData();
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
                                                 OnboardingScreen.id,
@@ -396,13 +446,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(color: AppColor.mainOrange),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                             child: Row(
                               children: [
                                 ConstrainedBox(
-                                  constraints: BoxConstraints(maxWidth: 70),
+                                  constraints: const BoxConstraints(maxWidth: 70),
                                   child: Text(
-                                    userData.name!,
+                                    userData.name ?? '-',
                                     style: AppTextStyles.body3(
                                       fontWeight: FontWeight.w800,
                                       color: AppColor.mainOrange,
@@ -411,8 +461,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                                CircleAvatar(
+                                const SizedBox(width: 10),
+                                const CircleAvatar(
                                   radius: 18,
                                   backgroundColor: AppColor.mainOrange,
                                   child: Icon(Icons.person, color: AppColor.white),
@@ -461,7 +511,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       contentPadding: EdgeInsets.only(left: 28, right: 28, top: 16, bottom: 12),
                       suffixIcon: Padding(
                         padding: const EdgeInsets.only(right: 16),
-                        child: Icon(Icons.search, size: 26),
+                        child: Icon(Icons.search, size: 26, color: AppColor.mainOrange),
                       ),
                       hintText: "Cari menu kesukaanmu disini!",
                       onChanged: (p0) {
@@ -541,23 +591,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     borderRadius: BorderRadius.vertical(
                                                       top: Radius.circular(10),
                                                     ),
-                                                    child: CachedNetworkImage(
-                                                      height: 155,
-                                                      imageUrl: menu.imageUrl ?? "",
-                                                      errorWidget:
-                                                          (context, url, error) => Center(
-                                                            child: Icon(
-                                                              Icons.image_not_supported,
-                                                              size: 50,
+                                                    child: Center(
+                                                      child: CachedNetworkImage(
+                                                        height: 155,
+                                                        imageUrl: menu.imageUrl ?? "",
+                                                        errorWidget:
+                                                            (context, url, error) => Center(
+                                                              child: Container(
+                                                                height: double.infinity,
+                                                                width: double.infinity,
+                                                                color: Colors.grey.shade400,
+                                                                child: Icon(
+                                                                  Icons.image_not_supported,
+                                                                  size: 50,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                      placeholder:
-                                                          (context, url) => Center(
-                                                            child: CircularProgressIndicator(
-                                                              color: AppColor.mainOrange,
+                                                        placeholder:
+                                                            (context, url) => Center(
+                                                              child: CircularProgressIndicator(
+                                                                color: AppColor.mainOrange,
+                                                              ),
                                                             ),
-                                                          ),
-                                                      fit: BoxFit.cover,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
                                                   Padding(

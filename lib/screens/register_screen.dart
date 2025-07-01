@@ -163,20 +163,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormFieldWidget(
                       controller: nameController,
                       hintText: "Nama Lengkap",
-                      prefixIcon: Icon(Icons.person, size: 22),
+                      prefixIcon: Icon(Icons.person, size: 22, color: AppColor.mainOrange),
                     ),
                     SizedBox(height: 16),
                     TextFormFieldWidget(
                       controller: emailController,
                       hintText: "Email",
-                      prefixIcon: Icon(Icons.email, size: 22),
+                      prefixIcon: Icon(Icons.email, size: 22, color: AppColor.mainOrange),
                       inputFormatters: [],
                     ),
                     SizedBox(height: 16),
                     TextFormFieldWidget(
                       controller: passwordController,
                       hintText: "Password",
-                      prefixIcon: Icon(Icons.password, size: 22),
+                      prefixIcon: Icon(Icons.password, size: 22, color:AppColor.mainOrange),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -185,8 +185,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         icon:
                             obscureText
-                                ? Icon(Icons.visibility_off, size: 20)
-                                : Icon(Icons.visibility, size: 20),
+                                ? Icon(Icons.visibility_off, size: 20, color: AppColor.mainOrange)
+                                : Icon(Icons.visibility, size: 20, color: AppColor.mainOrange),
                       ),
                       obscureText: obscureText,
                       maxlines: 1,

@@ -32,10 +32,6 @@ class CateringApi {
 
   static Future<ResponseModel> postMenu({required MenuModel menu}) async {
     final String token = await SharedPrefHelper.getToken();
-    print(menu.title);
-    print(menu.price);
-    print(menu.description);
-    print(jsonEncode(menu.toJson()));
     final response = await http.post(
       Uri.parse(Endpoint.menus),
       headers: {
@@ -46,9 +42,11 @@ class CateringApi {
       body: jsonEncode(menu.toJson()),
     );
     print(response.body);
-    print(response.statusCode);
     if (response.statusCode == 200 || response.statusCode == 422) {
-      return ResponseModel.fromJson(json: jsonDecode(response.body));
+      return ResponseModel.fromJson(
+        json: jsonDecode(response.body),
+        fromJsonT: (json) => MenuModel.fromJson(json),
+      );
     } else {
       throw Exception("Error Creating menu");
     }
@@ -58,10 +56,7 @@ class CateringApi {
     final String token = await SharedPrefHelper.getToken();
     final response = await http.delete(
       Uri.parse("${Endpoint.menus}/$id"),
-      headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-      },
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
     );
     print(response.body);
     if (response.statusCode == 200) {
@@ -169,7 +164,7 @@ class CateringApi {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
       },
-      body: {"name": name},
+      body: jsonEncode({"name": name}),
     );
     print(response.body);
     if (response.statusCode == 200) {
@@ -194,7 +189,7 @@ class CateringApi {
         "Authorization": "Bearer $token",
         "Content-Type": "application/json",
       },
-      body: {"name": name},
+      body: jsonEncode({"name": name}),
     );
     print(response.body);
     if (response.statusCode == 200) {
@@ -207,7 +202,7 @@ class CateringApi {
     }
   }
 
-  static Future<ResponseModel<CategoryModel>> deleteCategory({required int categoryId}) async {
+  static Future<int> deleteCategory({required int categoryId}) async {
     final String token = await SharedPrefHelper.getToken();
     final response = await http.delete(
       Uri.parse("${Endpoint.categories}/$categoryId"),
@@ -215,10 +210,7 @@ class CateringApi {
     );
     print(response.body);
     if (response.statusCode == 200) {
-      return ResponseModel<CategoryModel>.fromJson(
-        json: jsonDecode(response.body),
-        fromJsonT: (x) => CategoryModel.fromJson(x),
-      );
+      return response.statusCode;
     } else {
       throw Exception("Error Delete Category");
     }
@@ -250,6 +242,7 @@ class CateringApi {
     required int orderId,
   }) async {
     final String token = await SharedPrefHelper.getToken();
+    print(orderId);
 
     //TODO Problem
     final response = await http.put(
