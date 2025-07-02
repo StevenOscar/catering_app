@@ -241,10 +241,17 @@ class _DeleteMenuScreenState extends State<DeleteMenuScreen> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
-                  child: Text(
-                    "Tidak ada menu tersedia",
-                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.fastfood_rounded, size: 80),
+                      SizedBox(height: 12),
+                      Text(
+                        "Tidak ada menu tersedia",
+                        style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               );

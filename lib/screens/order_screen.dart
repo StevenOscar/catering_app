@@ -419,10 +419,17 @@ class _OrderScreenState extends State<OrderScreen> {
                         ? SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: Center(
-                            child: Text(
-                              "Tidak ada Pesanan pada kategori ini",
-                              style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.sentiment_dissatisfied_outlined, size: 80),
+                                SizedBox(height: 12),
+                                Text(
+                                  "Tidak ada Pesanan pada kategori ini",
+                                  style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
                         )
@@ -603,10 +610,17 @@ class _OrderScreenState extends State<OrderScreen> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
-                  child: Text(
-                    "Tidak ada riwayat pemesanan",
-                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.history_rounded, size: 80),
+                      SizedBox(height: 12),
+                      Text(
+                        "Tidak ada Riwayat pemesanan",
+                        style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               );

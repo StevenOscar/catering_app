@@ -168,7 +168,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: ListView(
             children: [
-              SizedBox(height: 24),
+              SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
                   pickImage();
@@ -208,7 +208,16 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                       controller: priceController,
                       keyboardType: TextInputType.number,
                       hintText: "Harga",
-                      prefixIcon: Icon(Icons.money, size: 22, color: AppColor.mainOrange),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 15, top: 14, bottom: 15),
+                        child: Text(
+                          "Rp.  ",
+                          style: AppTextStyles.body1(
+                            fontWeight: FontWeight.w700,
+                            color: AppColor.mainOrange,
+                          ),
+                        ),
+                      ),
                       inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'[^\d]'))],
                     ),
                     SizedBox(height: 20),
@@ -219,13 +228,16 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                       prefixIcon: Icon(Icons.description, size: 22, color: AppColor.mainOrange),
                       inputFormatters: [],
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 12),
                     Center(
                       child: Column(
                         children: [
                           Text(
                             "Tanggal Catering",
-                            style: AppTextStyles.body1(fontWeight: FontWeight.w800),
+                            style: AppTextStyles.heading4(
+                              fontWeight: FontWeight.w800,
+                              color: AppColor.mainOrange,
+                            ),
                           ),
                           Text(
                             AppDateFormatter.dayDateMonthYear(dateValue),
@@ -259,7 +271,17 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 12),
+                    Center(
+                      child: Text(
+                        "Kategori",
+                        style: AppTextStyles.heading4(
+                          fontWeight: FontWeight.w800,
+                          color: AppColor.mainOrange,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 8),
                     _isLoadingCategory
                         ? Center(child: CircularProgressIndicator())
                         : Container(
@@ -300,7 +322,7 @@ class _AddMenuScreenState extends State<AddMenuScreen> {
                             },
                           ),
                         ),
-                    SizedBox(height: 36),
+                    SizedBox(height: 28),
                     _isLoadingButton
                         ? Center(child: CircularProgressIndicator())
                         : SizedBox(

@@ -32,9 +32,6 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
   }
 
   Future<void> addCategory(String category) async {
-    setState(() {
-      _isLoading = true;
-    });
     final res = await CateringApi.postCategory(name: category);
     if (res.data != null) {
       AppToast.showSuccessToast(fToast, res.message);
@@ -48,14 +45,10 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
     } else {
       AppToast.showErrorToast(fToast, res.message);
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void inputCategory() {
     final categoryController = TextEditingController();
-    bool isLoading = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -88,7 +81,7 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                         onChanged: (p0) => setState(() {}),
                       ),
                       SizedBox(height: 28),
-                      isLoading
+                      _isLoading
                           ? CircularProgressIndicator()
                           : SizedBox(
                             width: double.infinity,
@@ -101,11 +94,11 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
                                       ? null
                                       : () {
                                         setState(() {
-                                          isLoading = true;
+                                          _isLoading = true;
                                         });
                                         addCategory(categoryController.text);
                                         setState(() {
-                                          isLoading = false;
+                                          _isLoading = false;
                                         });
                                       },
                             ),
@@ -243,10 +236,17 @@ class _AddCategoryScreenState extends State<AddCategoryScreen> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
-                  child: Text(
-                    "Tidak ada Kategori tersedia",
-                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.category, size: 80),
+                      SizedBox(height: 12),
+                      Text(
+                        "Tidak ada Kategori tersedia",
+                        style: AppTextStyles.body2(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               );

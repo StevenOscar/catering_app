@@ -31,9 +31,6 @@ class _UpdateDeleteCategoryScreenState extends State<UpdateDeleteCategoryScreen>
   }
 
   Future<void> editCategory(String category, int categoryId) async {
-    setState(() {
-      _isLoading = true;
-    });
     final res = await CateringApi.updateCategory(name: category, categoryId: categoryId);
     if (res.data != null) {
       AppToast.showSuccessToast(fToast, res.message);
@@ -47,14 +44,10 @@ class _UpdateDeleteCategoryScreenState extends State<UpdateDeleteCategoryScreen>
     } else {
       AppToast.showErrorToast(fToast, res.message);
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void updateCategory(CategoryModel category) {
     final categoryController = TextEditingController(text: category.name);
-    bool isLoading = false;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -87,7 +80,7 @@ class _UpdateDeleteCategoryScreenState extends State<UpdateDeleteCategoryScreen>
                         onChanged: (p0) => setState(() {}),
                       ),
                       SizedBox(height: 28),
-                      isLoading
+                      _isLoading
                           ? CircularProgressIndicator()
                           : SizedBox(
                             width: double.infinity,
@@ -100,11 +93,11 @@ class _UpdateDeleteCategoryScreenState extends State<UpdateDeleteCategoryScreen>
                                       ? null
                                       : () {
                                         setState(() {
-                                          isLoading = true;
+                                          _isLoading = true;
                                         });
                                         editCategory(categoryController.text, category.id);
                                         setState(() {
-                                          isLoading = false;
+                                          _isLoading = false;
                                         });
                                       },
                             ),
@@ -315,10 +308,17 @@ class _UpdateDeleteCategoryScreenState extends State<UpdateDeleteCategoryScreen>
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
-                  child: Text(
-                    "Tidak ada menu tersedia",
-                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.fastfood_rounded, size: 80),
+                      SizedBox(height: 12),
+                      Text(
+                        "Tidak ada menu tersedia",
+                        style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               );

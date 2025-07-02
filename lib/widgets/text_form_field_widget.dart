@@ -10,7 +10,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final void Function()? onEditingComplete;
-  final Icon? prefixIcon;
+  final Widget? prefixIcon;
   final EdgeInsets? contentPadding;
   final Function(String)? onChanged;
   final double? radius;

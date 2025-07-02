@@ -360,7 +360,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               backgroundColor: AppColor.mainOrange,
                                               child: Icon(
                                                 Icons.person,
-                                                size: 40,
+                                                size: 45,
                                                 color: Colors.white,
                                               ),
                                             ),
@@ -526,10 +526,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: Center(
-                        child: Text(
-                          "Tidak ada menu apapun pada\n${AppDateFormatter.dateMonthYear(_selectedDate)}",
-                          style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.fastfood_rounded, size: 80),
+                            SizedBox(height: 12),
+                            Text(
+                              "Tidak ada menu apapun pada\n${AppDateFormatter.dateMonthYear(_selectedDate)}",
+                              style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -672,10 +679,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
-                  child: Text(
-                    "Tidak ada menu tersedia",
-                    style: AppTextStyles.body2(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.fastfood_rounded, size: 80),
+                      SizedBox(height: 12),
+                      Text(
+                        "Tidak ada menu tersedia",
+                        style: AppTextStyles.body1(fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
                 ),
               );
